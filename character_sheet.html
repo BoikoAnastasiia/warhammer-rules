@@ -1,0 +1,1671 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+  <meta charset="UTF-8">
+  <title>WFRP 4e — Бланк персонажа</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700&family=Cormorant+SC:wght@600;700&display=swap"
+    rel="stylesheet">
+  <style>
+    /* ══════════════════════════════════════
+   Reset & Print
+   ══════════════════════════════════════ */
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    @page {
+      size: A4;
+      margin: 0;
+    }
+
+    @media print {
+      body {
+        margin: 0;
+        background: none;
+      }
+
+      .page {
+        margin: 0 auto;
+        box-shadow: none;
+      }
+
+      .page+.page {
+        page-break-before: always;
+      }
+    }
+
+    /* ══════════════════════════════════════
+   Variables
+   ══════════════════════════════════════ */
+    :root {
+      --font: 'Cormorant Garamond', 'Georgia', serif;
+      --font-sc: 'Cormorant SC', 'Cormorant Garamond', serif;
+      --dark: #1a1a1a;
+      --line: #666;
+      --line-light: #999;
+      --hdr-bg: rgba(15, 15, 15, 0.82);
+    }
+
+    body {
+      font-family: var(--font);
+      font-weight: 500;
+      color: var(--dark);
+      background: #bbb;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+
+    /* ══════════════════════════════════════
+   Page shell
+   ══════════════════════════════════════ */
+    .page {
+      width: 210mm;
+      height: 297mm;
+      position: relative;
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      overflow: hidden;
+      margin: 10px auto;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, .35);
+    }
+
+    .page-1,
+    .page-2 {
+      background-image: url('assets/blank_backgr.jpg');
+    }
+
+
+    .page-content {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .page-1 .page-content {
+      padding: 27px
+    }
+
+    .page-2 .page-content {
+      padding: 27px;
+      margin-top: 57px;
+    }
+
+    /* ══════════════════════════════════════
+   Section headers — dark bars
+   ══════════════════════════════════════ */
+    .section-hdr {
+      background: var(--hdr-bg);
+      color: #fff;
+      font-family: var(--font-sc);
+      font-weight: 700;
+      font-size: 9pt;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      text-align: center;
+      padding: 3px 0 2px 0;
+      line-height: 1.15;
+    }
+
+    .section-hdr.sm {
+      font-size: 12px;
+      letter-spacing: 1.2px;
+      padding: 2.5px 0 1.5px 0;
+    }
+
+    /* ══════════════════════════════════════
+   Personal info — label + underline
+   ══════════════════════════════════════ */
+    .personal-info {
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+      margin-bottom: 12px;
+      margin-top: 53px;
+    }
+
+    .pi-row {
+      display: grid;
+      gap: 10px;
+    }
+
+    .pi-row.r1 {
+      grid-template-columns: 4fr 3fr 3fr;
+    }
+
+    .pi-row.r2 {
+      grid-template-columns: 4fr 3fr 3fr;
+    }
+
+    .pi-row.r3 {
+      grid-template-columns: 1fr;
+    }
+
+    .pi-row.r4 {
+      grid-template-columns: 1.8fr 1.8fr 3.2fr 3.2fr;
+    }
+
+    .field {
+      display: flex;
+      align-items: flex-end;
+      gap: 4px;
+      min-height: 20px;
+    }
+
+    .field-label {
+      font-weight: 600;
+      font-size: 8.5pt;
+      white-space: nowrap;
+      padding-bottom: 2px;
+    }
+
+    .field-line {
+      flex: 1;
+      border-bottom: 1px solid var(--line);
+      min-height: 18px;
+    }
+
+    /* ══════════════════════════════════════
+   Characteristics + side blocks
+   ══════════════════════════════════════ */
+    .stats-row {
+      display: grid;
+      grid-template-columns: 53% 47%;
+      gap: 4px;
+    }
+
+    /* Characteristics 10-column table */
+    .char-table {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+    }
+
+    .char-table th,
+    .char-table td {
+      border: 1px solid var(--line-light);
+      border-top: none;
+      text-align: center;
+      font-size: 8pt;
+      padding: 2px 1px;
+      height: 17px;
+    }
+
+    .char-table thead th {
+      font-weight: 700;
+      font-size: 8.5pt;
+      background: rgba(0, 0, 0, 0.05);
+      border-top: none;
+    }
+
+    .char-table th:first-child,
+    .char-table td:first-child {
+      text-align: left;
+      padding-left: 4px;
+      width: 22%;
+      font-size: 12px;
+    }
+
+    .char-table thead th:first-child {
+      font-size: 12px;
+    }
+
+    .char-table td:first-child {
+      font-weight: 500;
+    }
+
+    /* Side: Fate, Resilience, XP, Movement */
+    .side-blocks {
+      display: grid;
+      grid-template-columns: 1fr 1.5fr 1.3fr;
+      grid-template-rows: auto auto;
+      gap: 4px;
+    }
+
+    .sb-grid {
+      display: grid;
+    }
+
+    .sb-row {
+      display: grid;
+      border-bottom: 1px solid var(--line-light);
+      min-height: 17px;
+      align-items: center;
+      font-size: 8pt;
+    }
+
+    .sb-row.hdr {
+      background: rgba(0, 0, 0, 0.05);
+      font-weight: 700;
+      font-size: 12px;
+      text-align: center;
+    }
+
+    .sb-row span {
+      padding: 0 3px;
+      border-right: 1px solid var(--line-light);
+    }
+
+    .sb-row span:last-child {
+      border-right: none;
+    }
+
+    .sb-label {
+      font-weight: 500;
+      font-size: 12px;
+    }
+
+    .sb-val {
+      text-align: center;
+    }
+
+    .fate-row {
+      grid-template-columns: 55% 45%;
+    }
+
+    .triple-row {
+      grid-template-columns: 1fr 1fr 1fr;
+    }
+
+    .movement-block {
+      grid-column: 1 / -1;
+    }
+
+    /* ══════════════════════════════════════
+   Skills — 3 equal columns
+   ══════════════════════════════════════ */
+    .skills-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 4px;
+      margin-bottom: 12px;
+    }
+
+    .sk-table {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+    }
+
+    .sk-table th,
+    .sk-table td {
+      border: 1px solid var(--line-light);
+      font-size: 12px;
+      padding: 1.5px 3px;
+      height: 25px;
+    }
+
+    .sk-table th {
+      font-weight: 700;
+      font-size: 12px;
+      text-align: center;
+      background: rgba(0, 0, 0, 0.05);
+    }
+
+    .sk-table td:first-child {
+      text-align: left;
+    }
+
+    .sk-table td:nth-child(n+2) {
+      text-align: center;
+    }
+
+    .sk-table .c-name {
+      width: 54%;
+    }
+
+    .sk-table .c-attr {
+      width: 14%;
+    }
+
+    .sk-table .c-adv {
+      width: 16%;
+    }
+
+    .sk-table .c-val {
+      width: 16%;
+    }
+
+    .sk-table.prof .c-name {
+      width: 46%;
+    }
+
+    .sk-table.prof .c-attr {
+      width: 16%;
+    }
+
+    .sk-table.prof .c-adv {
+      width: 19%;
+    }
+
+    .sk-table.prof .c-val {
+      width: 19%;
+    }
+
+    /* Specialization blank */
+    .sp {
+      display: inline-block;
+      width: 90%;
+      border-bottom: 1px solid var(--line-light);
+      vertical-align: baseline;
+    }
+
+    /* ══════════════════════════════════════
+   Bottom: Talents | Ambitions + Team
+   ══════════════════════════════════════ */
+    .bottom-row {
+      display: grid;
+      grid-template-columns: 58% 42%;
+      gap: 5px;
+      flex: 1;
+      min-height: 0;
+    }
+
+    .tal-table {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+    }
+
+    .tal-table th,
+    .tal-table td {
+      border-bottom: 1px solid var(--line-light);
+      font-size: 12px;
+      padding: 1.5px 3px;
+      height: 21px;
+    }
+
+    .tal-table th {
+      font-weight: 700;
+      font-size: 12pt;
+      text-align: center;
+      background: rgba(0, 0, 0, 0.05);
+    }
+
+    .tal-table .ct {
+      width: 32%;
+    }
+
+    .tal-table .cl {
+      width: 10%;
+      text-align: center;
+    }
+
+    .tal-table .cd {
+      width: 58%;
+    }
+
+    /* Ambitions */
+    .amb-field {
+      padding: 29px 4px;
+      min-height: 30px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .amb-field:nth-child(3) {
+      border-top: 1px solid black;
+    }
+
+    /* Team */
+    .team-field {
+      border-bottom: 1px solid var(--line);
+      padding: 3px 4px;
+      min-height: 27px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    /* Right column flex */
+    .right-col {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    /* ═══════════════════════════════════════════
+   PAGE 2
+   ═══════════════════════════════════════════ */
+
+    /* Armor row */
+    .armor-row {
+      display: grid;
+      grid-template-columns: 55% 45%;
+      gap: 5px;
+      margin-bottom: 4px;
+      min-height: 72mm;
+      align-items: start;
+    }
+
+    .tbl {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+    }
+
+    .tbl th,
+    .tbl td {
+      border-bottom: 1px solid var(--line-light);
+      font-size: 12px;
+      padding: 2px 3px;
+      height: 16px;
+      text-align: center;
+    }
+
+    .tbl th {
+      font-weight: 700;
+      font-size: 6.5pt;
+      background: rgba(0, 0, 0, 0.05);
+      letter-spacing: 0.3px;
+    }
+
+    .tbl td:first-child,
+    .tbl th:first-child {
+      text-align: left;
+    }
+
+    /* Armor column widths */
+    .arm-name {
+      width: 28%;
+    }
+
+    .arm-zones {
+      width: 24%;
+    }
+
+    .arm-wt {
+      width: 10%;
+    }
+
+    .arm-ap {
+      width: 10%;
+    }
+
+    .arm-qual {
+      width: 28%;
+    }
+
+    /* Body diagram column — stretches full height of armor row */
+    .armor-diagram-col {
+      align-self: stretch;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Body diagram: silhouette left, parts list right */
+    .body-diagram-wrap {
+      flex: 1;
+      display: flex;
+      gap: 4px;
+      padding: 4px 2px;
+      align-items: center;
+    }
+
+    .body-diagram-wrap .silhouette {
+      width: 55%;
+      height: auto;
+      max-height: 100%;
+      object-fit: contain;
+      mix-blend-mode: multiply;
+      opacity: 0.4;
+      flex-shrink: 0;
+    }
+
+    .body-parts {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .bp {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      line-height: 1.3;
+      padding: 2px 0;
+      flex-direction: row-reverse;
+    
+    }
+
+    .bp-label {
+      flex: 1;
+    }
+
+    .bp-box {
+      width: 22px;
+      height: 18px;
+      border: 1px solid var(--line);
+      flex-shrink: 0;
+    }
+
+    /* Middle row */
+    .middle-row {
+      display: grid;
+      grid-template-columns: 28% 38% 34%;
+      gap: 5px;
+      margin-bottom: 12px;
+    }
+
+    /* Freeform boxes (Psychology, Corruption) */
+    .freeform {
+      border: 1px solid var(--line);
+      min-height: 52px;
+    }
+
+    /* Money + Weight side by side */
+    .money-weight {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4px;
+    }
+
+    .mini-tbl {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .mini-tbl td {
+      border-bottom: 1px solid var(--line-light);
+      font-size: 12px;
+      padding: 2px 3px;
+      height: 15px;
+    }
+
+    .mini-tbl td:first-child {
+      font-weight: 500;
+      width: 56%;
+    }
+
+    .mini-tbl td:last-child {
+      text-align: center;
+    }
+
+    /* Health */
+    .health-tbl {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .health-tbl td {
+      border-bottom: 1px solid var(--line-light);
+      font-size: 8pt;
+      padding: 2px 4px;
+      height: 17px;
+    }
+
+    .health-tbl td:first-child {
+      font-weight: 500;
+      width: 56%;
+    }
+
+    .health-tbl td:last-child {
+      text-align: center;
+    }
+
+    /* Crit wounds */
+    .crit-tbl {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .crit-tbl td {
+      border-bottom: 1px solid var(--line-light);
+      font-size: 12px;
+      height: 15px;
+    }
+
+    /* Weapons */
+    .weapons-section {
+      margin-bottom: 12px;
+    }
+
+    .wpn-name {
+      width: 22%;
+    }
+
+    .wpn-type {
+      width: 10%;
+    }
+
+    .wpn-wt {
+      width: 8%;
+    }
+
+    .wpn-range {
+      width: 14%;
+    }
+
+    .wpn-dmg {
+      width: 10%;
+    }
+
+    .wpn-qual {
+      width: 36%;
+    }
+
+    /* Spells */
+    .spells-section {
+      margin-bottom: 12px;
+    }
+
+    .spl-name {
+      width: 18%;
+    }
+
+    .spl-cn {
+      width: 10%;
+    }
+
+    .spl-rng {
+      width: 12%;
+    }
+
+    .spl-trg {
+      width: 10%;
+    }
+
+    .spl-dur {
+      width: 13%;
+    }
+
+    .spl-eff {
+      width: 37%;
+    }
+
+    /* Sin points */
+    .sin-points {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 5px;
+      padding: 3px 0;
+    }
+
+    .sin-points .sin-label {
+      font-weight: 700;
+      font-size: 8.5pt;
+    }
+
+    .sin-points .sin-box {
+      width: 20px;
+      height: 16px;
+      border: 1px solid var(--line);
+    }
+
+    /* Flex utility */
+    .fcol {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .g3 {
+      gap: 3px;
+    }
+
+    .g4 {
+      gap: 4px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ══════════════════════════════════════════
+     PAGE 1
+     ══════════════════════════════════════════ -->
+  <div class="page page-1">
+    <div class="page-content">
+
+      <!-- Personal Info -->
+      <div class="personal-info">
+        <div class="pi-row r1">
+          <div class="field"><span class="field-label">Имя</span><span class="field-line"></span></div>
+          <div class="field"><span class="field-label">Народ</span><span class="field-line"></span></div>
+          <div class="field"><span class="field-label">Класс</span><span class="field-line"></span></div>
+        </div>
+        <div class="pi-row r2">
+          <div class="field"><span class="field-label">Карьера</span><span class="field-line"></span></div>
+          <div class="field"><span class="field-label">Ступень карьеры</span><span class="field-line"></span></div>
+          <div class="field"><span class="field-label">Статус</span><span class="field-line"></span></div>
+        </div>
+        <div class="pi-row r3">
+          <div class="field"><span class="field-label">Карьерный путь</span><span class="field-line"></span></div>
+        </div>
+        <div class="pi-row r4">
+          <div class="field"><span class="field-label">Возраст</span><span class="field-line"></span></div>
+          <div class="field"><span class="field-label">Рост</span><span class="field-line"></span></div>
+          <div class="field"><span class="field-label">Волосы</span><span class="field-line"></span></div>
+          <div class="field"><span class="field-label">Глаза</span><span class="field-line"></span></div>
+        </div>
+      </div>
+
+      <!-- Characteristics + Fate/Resilience/XP/Movement -->
+      <div class="stats-row">
+        <div>
+          <div class="section-hdr">Характеристики</div>
+          <table class="char-table">
+            <thead>
+              <tr>
+                <th></th>
+                <th>ББ</th>
+                <th>ДБ</th>
+                <th>С</th>
+                <th>В</th>
+                <th>И</th>
+                <th>Пр</th>
+                <th>Л</th>
+                <th>Инт</th>
+                <th>СВ</th>
+                <th>Х</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Начальное знач.</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td>Шаги развития</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td>Текущее знач.</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="side-blocks">
+          <!-- Fate -->
+          <div>
+            <div class="section-hdr sm">Судьба</div>
+            <div class="sb-grid">
+              <div class="sb-row fate-row"><span class="sb-label">Fate</span><span class="sb-val"></span></div>
+              <div class="sb-row fate-row"><span class="sb-label">Luck</span><span class="sb-val"></span></div>
+            </div>
+          </div>
+
+          <!-- Resilience -->
+          <div>
+            <div class="section-hdr sm">Упорство</div>
+            <div class="sb-grid">
+              <div class="sb-row hdr triple-row"><span>Упорство</span><span>Решимость</span><span>Мотивация</span></div>
+              <div class="sb-row triple-row"><span class="sb-val"></span><span class="sb-val"></span><span
+                  class="sb-val"></span></div>
+            </div>
+          </div>
+
+          <!-- XP -->
+          <div>
+            <div class="section-hdr sm">Опыт</div>
+            <div class="sb-grid">
+              <div class="sb-row hdr triple-row"><span>Запас</span><span>Траты</span><span>Всего</span></div>
+              <div class="sb-row triple-row"><span class="sb-val"></span><span class="sb-val"></span><span
+                  class="sb-val"></span></div>
+            </div>
+          </div>
+
+          <!-- Movement -->
+          <div class="movement-block">
+            <div class="section-hdr sm">Перемещение</div>
+            <div class="sb-grid">
+              <div class="sb-row hdr triple-row"><span>Скорость</span><span>Шаг</span><span>Бег</span></div>
+              <div class="sb-row triple-row"><span class="sb-val"></span><span class="sb-val"></span><span
+                  class="sb-val"></span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Skills — 3 columns -->
+      <div class="skills-row">
+        <div>
+          <div class="section-hdr sm">Общие навыки</div>
+          <table class="sk-table">
+            <thead>
+              <tr>
+                <th class="c-name">Навык</th>
+                <th class="c-attr">Хар.</th>
+                <th class="c-adv">Шаги</th>
+                <th class="c-val">Знач.</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Азартные игры</td>
+                <td>Инт</td>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td>Атлетика</td>
+                <td>Пр</td>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td>Артистизм (<span class="sp"></span>)</td>
+                <td>Х</td>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td>Верховая езда (<span class="sp"></span>)</td>
+                <td>Пр</td>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td>Вождение</td>
+                <td>Пр</td>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td>Выживание</td>
+                <td>Инт</td>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td>Гребля</td>
+                <td>С</td>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td>Запугивание</td>
+                <td>С</td>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td>Интуиция</td>
+                <td>И</td>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td>Искусство (<span class="sp"></span>)</td>
+                <td>Л</td>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td>Кутёж</td>
+                <td>В</td>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td>Лазание</td>
+                <td>С</td>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td>Лидерство</td>
+                <td>Х</td>
+                <td></td>
+                <td></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div>
+          <div class="section-hdr sm">Общие навыки</div>
+          <table class="sk-table">
+            <thead>
+              <tr>
+                <th class="c-name">Навык</th>
+                <th class="c-attr">Хар.</th>
+                <th class="c-adv">Шаги</th>
+                <th class="c-val">Знач.</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Наблюдательность</td>
+                <td>И</td>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td>Обаяние</td>
+                <td>Х</td>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td>Ориентирование</td>
+                <td>И</td>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td>Подкуп</td>
+                <td>Х</td>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td>Рукоп. бой (<span class="sp"></span>)</td>
+                <td>ББ</td>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td>Рукоп. бой (основн.)</td>
+                <td>ББ</td>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td>Скрытность (<span class="sp"></span>)</td>
+                <td>Пр</td>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td>Сплетничество</td>
+                <td>Х</td>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td>Стойкость</td>
+                <td>В</td>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td>Торговля</td>
+                <td>Х</td>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td>Уклонение</td>
+                <td>Пр</td>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td>Усмирение животных</td>
+                <td>СВ</td>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td>Хладнокровие</td>
+                <td>СВ</td>
+                <td></td>
+                <td></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div>
+          <div class="section-hdr sm">Проф. навыки и спец.</div>
+          <table class="sk-table prof">
+            <thead>
+              <tr>
+                <th class="c-name">Навык</th>
+                <th class="c-attr">Хар.</th>
+                <th class="c-adv">Шаги</th>
+                <th class="c-val">Знач.</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Bottom: Talents | Ambitions + Team -->
+      <div class="bottom-row">
+        <div>
+          <div class="section-hdr">Таланты</div>
+          <table class="tal-table">
+            <thead>
+              <tr>
+                <th class="ct">Талант</th>
+                <th class="cl">Ур.</th>
+                <th class="cd">Описание</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="right-col">
+          <div>
+            <div class="section-hdr">Амбиции</div>
+            <div class="amb-field">Краткосрочная</div>
+            <div class="amb-field">Долгосрочная</div>
+          </div>
+          <div style="flex:1;">
+            <div class="section-hdr">Команда</div>
+            <div class="team-field">Название команды</div>
+            <div class="team-field">Краткоср. амбиция</div>
+            <div class="team-field">Долгоср. амбиция</div>
+            <div class="team-field">Члены команды</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+     PAGE 2
+     ══════════════════════════════════════════ -->
+  <div class="page page-2">
+    <div class="page-content">
+
+      <!-- Armor row -->
+      <div class="armor-row">
+        <div>
+          <div class="section-hdr">Броня</div>
+          <table class="tbl">
+            <thead>
+              <tr>
+                <th class="arm-name">Название</th>
+                <th class="arm-zones">Зоны попадания</th>
+                <th class="arm-wt">Вес</th>
+                <th class="arm-ap">КБ</th>
+                <th class="arm-qual">Достоинства и изъяны</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="armor-diagram-col">
+          <div class="section-hdr">Класс брони</div>
+          <div class="body-diagram-wrap">
+            <img class="silhouette" src="assets/armor.png" alt="">
+            <div class="body-parts">
+              <div class="bp"><span class="bp-label">01–09 Голова</span><span class="bp-box"></span></div>
+              <div class="bp"><span class="bp-label">10–24 П. рука</span><span class="bp-box"></span></div>
+              <div class="bp"><span class="bp-label">25–44 Л. рука</span><span class="bp-box"></span></div>
+              <div class="bp"><span class="bp-label">45–79 Торс</span><span class="bp-box"></span></div>
+              <div class="bp"><span class="bp-label">80–89 Л. нога</span><span class="bp-box"></span></div>
+              <div class="bp"><span class="bp-label">90–00 П. нога</span><span class="bp-box"></span></div>
+              <div class="bp"><span class="bp-label">Щит</span><span class="bp-box"></span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Middle row -->
+      <div class="middle-row">
+
+        <!-- Inventory -->
+        <div>
+          <div class="section-hdr">Имущество</div>
+          <table class="tbl">
+            <thead>
+              <tr>
+                <th style="width:72%; text-align:left;">Название</th>
+                <th style="width:28%;">Вес</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td></td>
+                <td></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Psychology + Corruption + Money/Weight -->
+        <div class="fcol g3">
+          <div>
+            <div class="section-hdr">Психика</div>
+            <div class="freeform"></div>
+          </div>
+          <div>
+            <div class="section-hdr sm">Скверна и мутации</div>
+            <div class="freeform"></div>
+          </div>
+          <div class="money-weight">
+            <div>
+              <div class="section-hdr sm">Деньги</div>
+              <table class="mini-tbl">
+                <tr>
+                  <td>Пенни</td>
+                  <td></td>
+                </tr>
+                <tr>
+                  <td>Шиллинги</td>
+                  <td></td>
+                </tr>
+                <tr>
+                  <td>Кроны</td>
+                  <td></td>
+                </tr>
+              </table>
+            </div>
+            <div>
+              <div class="section-hdr sm">Вес</div>
+              <table class="mini-tbl">
+                <tr>
+                  <td>Оружие</td>
+                  <td></td>
+                </tr>
+                <tr>
+                  <td>Броня</td>
+                  <td></td>
+                </tr>
+                <tr>
+                  <td>Имущество</td>
+                  <td></td>
+                </tr>
+                <tr>
+                  <td>Предел</td>
+                  <td></td>
+                </tr>
+                <tr>
+                  <td>Общий вес</td>
+                  <td></td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Health + Crit -->
+        <div class="fcol g3">
+          <div>
+            <div class="section-hdr">Здоровье</div>
+            <table class="health-tbl">
+              <tr>
+                <td>РС</td>
+                <td></td>
+              </tr>
+              <tr>
+                <td>РВ×2</td>
+                <td></td>
+              </tr>
+              <tr>
+                <td>РСВ</td>
+                <td></td>
+              </tr>
+              <tr>
+                <td>Здоровяк</td>
+                <td></td>
+              </tr>
+              <tr>
+                <td>Пункты здоровья</td>
+                <td></td>
+              </tr>
+            </table>
+          </div>
+          <div style="flex:1;">
+            <div class="section-hdr sm">Крит. ранения</div>
+            <table class="crit-tbl">
+              <tr>
+                <td></td>
+              </tr>
+              <tr>
+                <td></td>
+              </tr>
+              <tr>
+                <td></td>
+              </tr>
+              <tr>
+                <td></td>
+              </tr>
+              <tr>
+                <td></td>
+              </tr>
+              <tr>
+                <td></td>
+              </tr>
+              <tr>
+                <td></td>
+              </tr>
+              <tr>
+                <td></td>
+              </tr>
+            </table>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Weapons -->
+      <div class="weapons-section">
+        <div class="section-hdr">Оружие</div>
+        <table class="tbl">
+          <thead>
+            <tr>
+              <th class="wpn-name">Название</th>
+              <th class="wpn-type">Тип</th>
+              <th class="wpn-wt">Вес</th>
+              <th class="wpn-range">Длина/дальноб.</th>
+              <th class="wpn-dmg">Урон</th>
+              <th class="wpn-qual">Достоинства и изъяны</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Spells & Prayers -->
+      <div class="spells-section">
+        <div class="section-hdr">Заклинания и молитвы</div>
+        <table class="tbl">
+          <thead>
+            <tr>
+              <th class="spl-name">Название</th>
+              <th class="spl-cn">Порог сотв.</th>
+              <th class="spl-rng">Дальность</th>
+              <th class="spl-trg">Цель</th>
+              <th class="spl-dur">Длительность</th>
+              <th class="spl-eff">Эффект</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="sin-points">
+          <span class="sin-label">Греховность</span>
+          <span class="sin-box"></span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</body>
+
+</html>
