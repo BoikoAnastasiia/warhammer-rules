@@ -1,0 +1,1371 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>WFRP 4e — Персонаж</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Cormorant+SC:wght@600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --bg: #1a1612;
+      --parchment: #d4c4a8;
+      --parchment-dark: #c4b494;
+      --text: #2a2218;
+      --text-light: #5a4a38;
+      --accent: #8b0000;
+      --accent-light: #a52a2a;
+      --border: #8b7355;
+      --border-dark: #5a4a38;
+      --header-bg: rgba(26, 22, 18, 0.9);
+      --card-bg: rgba(212, 196, 168, 0.95);
+      --input-bg: rgba(255, 255, 255, 0.3);
+      --shadow: rgba(0, 0, 0, 0.3);
+    }
+
+    html, body {
+      height: 100%;
+      overflow: hidden;
+    }
+
+    body {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-weight: 500;
+      background: var(--bg);
+      color: var(--text);
+      font-size: 16px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .app {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      max-width: 600px;
+      margin: 0 auto;
+      width: 100%;
+      background: linear-gradient(135deg, var(--parchment) 0%, var(--parchment-dark) 100%);
+      box-shadow: 0 0 30px var(--shadow);
+      overflow: hidden;
+    }
+
+    /* Header */
+    .header {
+      background: var(--header-bg);
+      color: var(--parchment);
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 2px solid var(--border);
+    }
+
+    .header h1 {
+      font-family: 'Cormorant SC', serif;
+      font-size: 1.3rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .header-btn {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--parchment);
+      padding: 6px 12px;
+      font-family: inherit;
+      font-size: 0.85rem;
+      cursor: pointer;
+      border-radius: 4px;
+      transition: all 0.2s;
+    }
+
+    .header-btn:hover {
+      background: var(--border);
+      color: var(--bg);
+    }
+
+    /* Tab Navigation */
+    .tab-nav {
+      display: flex;
+      background: var(--header-bg);
+      border-bottom: 2px solid var(--border);
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .tab-nav::-webkit-scrollbar {
+      display: none;
+    }
+
+    .tab-btn {
+      flex: 1;
+      min-width: 80px;
+      padding: 10px 8px;
+      background: transparent;
+      border: none;
+      color: var(--parchment-dark);
+      font-family: 'Cormorant SC', serif;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      border-bottom: 3px solid transparent;
+      white-space: nowrap;
+    }
+
+    .tab-btn.active {
+      color: var(--parchment);
+      border-bottom-color: var(--accent);
+      background: rgba(139, 0, 0, 0.2);
+    }
+
+    .tab-btn:hover:not(.active) {
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    /* Content Area */
+    .content {
+      flex: 1;
+      overflow-y: auto;
+      padding: 16px;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    /* Section styling */
+    .section {
+      margin-bottom: 20px;
+    }
+
+    .section-title {
+      font-family: 'Cormorant SC', serif;
+      font-size: 0.9rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: var(--parchment);
+      background: var(--header-bg);
+      padding: 8px 12px;
+      margin-bottom: 12px;
+      border-radius: 4px;
+      text-align: center;
+    }
+
+    /* Form fields */
+    .field-group {
+      margin-bottom: 12px;
+    }
+
+    .field-label {
+      display: block;
+      font-weight: 600;
+      font-size: 0.85rem;
+      color: var(--text-light);
+      margin-bottom: 4px;
+    }
+
+    .field-input {
+      width: 100%;
+      padding: 10px 12px;
+      font-family: inherit;
+      font-size: 1rem;
+      background: var(--input-bg);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      color: var(--text);
+    }
+
+    .field-input:focus {
+      outline: none;
+      border-color: var(--accent);
+      background: rgba(255, 255, 255, 0.5);
+    }
+
+    .field-input::placeholder {
+      color: var(--text-light);
+      opacity: 0.6;
+    }
+
+    /* Grid layouts */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 12px;
+    }
+
+    .grid-4 {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr 1fr;
+      gap: 8px;
+    }
+
+    /* Stat cards */
+    .stat-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px;
+      text-align: center;
+      box-shadow: 0 2px 4px var(--shadow);
+    }
+
+    .stat-card .stat-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--text-light);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 6px;
+    }
+
+    .stat-card .stat-value {
+      width: 100%;
+      padding: 8px;
+      font-family: inherit;
+      font-size: 1.4rem;
+      font-weight: 700;
+      text-align: center;
+      background: var(--input-bg);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      color: var(--text);
+    }
+
+    .stat-card .stat-value:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+
+    /* Attribute card */
+    .attr-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px;
+      box-shadow: 0 2px 4px var(--shadow);
+    }
+
+    .attr-card .attr-name {
+      font-family: 'Cormorant SC', serif;
+      font-size: 0.9rem;
+      font-weight: 700;
+      text-align: center;
+      margin-bottom: 8px;
+      color: var(--text);
+    }
+
+    .attr-card .attr-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+      margin-bottom: 6px;
+    }
+
+    .attr-card .attr-row:last-child {
+      margin-bottom: 0;
+    }
+
+    .attr-card .attr-mini {
+      text-align: center;
+    }
+
+    .attr-card .attr-mini-label {
+      font-size: 0.65rem;
+      color: var(--text-light);
+      text-transform: uppercase;
+    }
+
+    .attr-card .attr-mini-input {
+      width: 100%;
+      padding: 4px;
+      font-family: inherit;
+      font-size: 0.9rem;
+      font-weight: 600;
+      text-align: center;
+      background: var(--input-bg);
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      color: var(--text);
+    }
+
+    .attr-card .attr-mini-input:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+
+    .attr-card .attr-current {
+      grid-column: 1 / -1;
+    }
+
+    .attr-card .attr-current input {
+      font-size: 1.3rem;
+      padding: 8px;
+      background: rgba(139, 0, 0, 0.1);
+      border-color: var(--accent);
+    }
+
+    /* Skills table */
+    .skill-row {
+      display: grid;
+      grid-template-columns: 1fr 50px 50px 50px;
+      gap: 8px;
+      padding: 8px 0;
+      border-bottom: 1px solid var(--border);
+      align-items: center;
+    }
+
+    .skill-row:last-child {
+      border-bottom: none;
+    }
+
+    .skill-name {
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+
+    .skill-name small {
+      color: var(--text-light);
+      font-size: 0.75rem;
+    }
+
+    .skill-input {
+      width: 100%;
+      padding: 6px 4px;
+      font-family: inherit;
+      font-size: 0.9rem;
+      text-align: center;
+      background: var(--input-bg);
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      color: var(--text);
+    }
+
+    .skill-input:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+
+    .skill-header {
+      font-weight: 700;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      color: var(--text-light);
+    }
+
+    /* Talent/Item rows */
+    .item-row {
+      display: grid;
+      grid-template-columns: 1fr 60px;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .item-row.wide {
+      grid-template-columns: 1fr;
+    }
+
+    .item-input {
+      width: 100%;
+      padding: 8px 10px;
+      font-family: inherit;
+      font-size: 0.9rem;
+      background: var(--input-bg);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      color: var(--text);
+    }
+
+    .item-input:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+
+    /* Textarea */
+    .field-textarea {
+      width: 100%;
+      min-height: 100px;
+      padding: 10px 12px;
+      font-family: inherit;
+      font-size: 0.95rem;
+      background: var(--input-bg);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      color: var(--text);
+      resize: vertical;
+    }
+
+    .field-textarea:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+
+    /* Health display */
+    .health-display {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      padding: 16px;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      margin-bottom: 16px;
+    }
+
+    .health-heart {
+      position: relative;
+      width: 80px;
+      height: 80px;
+    }
+
+    .health-heart svg {
+      width: 100%;
+      height: 100%;
+      fill: var(--accent);
+    }
+
+    .health-heart .health-value {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: white;
+    }
+
+    .health-heart input {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 50px;
+      padding: 4px;
+      font-family: inherit;
+      font-size: 1.3rem;
+      font-weight: 700;
+      text-align: center;
+      background: transparent;
+      border: none;
+      color: white;
+    }
+
+    .health-heart input:focus {
+      outline: none;
+      background: rgba(0,0,0,0.2);
+      border-radius: 4px;
+    }
+
+    .health-max {
+      text-align: center;
+    }
+
+    .health-max-label {
+      font-size: 0.8rem;
+      color: var(--text-light);
+      margin-bottom: 4px;
+    }
+
+    .health-max-input {
+      width: 60px;
+      padding: 8px;
+      font-family: inherit;
+      font-size: 1.2rem;
+      font-weight: 700;
+      text-align: center;
+      background: var(--input-bg);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      color: var(--text);
+    }
+
+    .health-max-input:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+
+    /* Weapon/Armor rows */
+    .equipment-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px;
+      margin-bottom: 12px;
+      box-shadow: 0 2px 4px var(--shadow);
+    }
+
+    .equipment-card .eq-name {
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .equipment-card .eq-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+
+    .equipment-card .eq-field {
+      text-align: center;
+    }
+
+    .equipment-card .eq-label {
+      font-size: 0.7rem;
+      color: var(--text-light);
+      text-transform: uppercase;
+    }
+
+    .equipment-card .eq-input {
+      width: 100%;
+      padding: 4px;
+      font-family: inherit;
+      font-size: 0.85rem;
+      text-align: center;
+      background: var(--input-bg);
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      color: var(--text);
+    }
+
+    .equipment-card .eq-input:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+
+    /* Add button */
+    .add-btn {
+      width: 100%;
+      padding: 12px;
+      background: transparent;
+      border: 2px dashed var(--border);
+      border-radius: 8px;
+      color: var(--text-light);
+      font-family: inherit;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .add-btn:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: rgba(139, 0, 0, 0.05);
+    }
+
+    /* Delete button */
+    .delete-btn {
+      background: transparent;
+      border: none;
+      color: var(--accent);
+      cursor: pointer;
+      padding: 4px 8px;
+      font-size: 1.2rem;
+      opacity: 0.6;
+      transition: opacity 0.2s;
+    }
+
+    .delete-btn:hover {
+      opacity: 1;
+    }
+
+    /* Mobile optimizations */
+    @media (max-width: 400px) {
+      .grid-2 {
+        grid-template-columns: 1fr;
+      }
+      
+      .attr-card {
+        padding: 8px;
+      }
+      
+      .tab-btn {
+        font-size: 0.7rem;
+        padding: 8px 4px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header class="header">
+      <h1>WFRP 4e</h1>
+      <div class="header-actions">
+        <button class="header-btn" onclick="exportData()">Экспорт</button>
+        <button class="header-btn" onclick="document.getElementById('importFile').click()">Импорт</button>
+        <input type="file" id="importFile" accept=".json" style="display:none" onchange="importData(event)">
+      </div>
+    </header>
+
+    <nav class="tab-nav">
+      <button class="tab-btn active" data-tab="overview">Обзор</button>
+      <button class="tab-btn" data-tab="attributes">Хар-ки</button>
+      <button class="tab-btn" data-tab="skills">Навыки</button>
+      <button class="tab-btn" data-tab="combat">Бой</button>
+      <button class="tab-btn" data-tab="notes">Заметки</button>
+    </nav>
+
+    <main class="content">
+      <!-- OVERVIEW TAB -->
+      <div class="tab-content active" id="overview">
+        <div class="section">
+          <div class="field-group">
+            <label class="field-label">Имя персонажа</label>
+            <input type="text" class="field-input" data-field="name" placeholder="Введите имя...">
+          </div>
+          
+          <div class="grid-2">
+            <div class="field-group">
+              <label class="field-label">Народ</label>
+              <input type="text" class="field-input" data-field="species" placeholder="Человек, эльф...">
+            </div>
+            <div class="field-group">
+              <label class="field-label">Класс</label>
+              <input type="text" class="field-input" data-field="class" placeholder="Воин, учёный...">
+            </div>
+          </div>
+
+          <div class="grid-2">
+            <div class="field-group">
+              <label class="field-label">Карьера</label>
+              <input type="text" class="field-input" data-field="career" placeholder="Солдат...">
+            </div>
+            <div class="field-group">
+              <label class="field-label">Ступень карьеры</label>
+              <input type="text" class="field-input" data-field="careerLevel" placeholder="1, 2, 3...">
+            </div>
+          </div>
+
+          <div class="field-group">
+            <label class="field-label">Карьерный путь</label>
+            <input type="text" class="field-input" data-field="careerPath" placeholder="Рекрут → Солдат → ...">
+          </div>
+
+          <div class="field-group">
+            <label class="field-label">Статус</label>
+            <input type="text" class="field-input" data-field="status" placeholder="Серебро 2">
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">Здоровье</div>
+          <div class="health-display">
+            <div class="health-heart">
+              <svg viewBox="0 0 32 32">
+                <path d="M16 28.72a3 3 0 0 1-2.13-.88L3.57 17.54a8.72 8.72 0 0 1-2.52-6.25 8.06 8.06 0 0 1 8.14-8A8.06 8.06 0 0 1 16 6.23a8.06 8.06 0 0 1 6.81-2.94 8.06 8.06 0 0 1 8.14 8 8.72 8.72 0 0 1-2.52 6.25l-10.3 10.3a3 3 0 0 1-2.13.88z"/>
+              </svg>
+              <input type="number" data-field="woundsCurrent" placeholder="0">
+            </div>
+            <div class="health-max">
+              <div class="health-max-label">Макс. раны</div>
+              <input type="number" class="health-max-input" data-field="woundsMax" placeholder="0">
+            </div>
+          </div>
+
+          <div class="grid-3">
+            <div class="stat-card">
+              <div class="stat-label">Судьба</div>
+              <input type="number" class="stat-value" data-field="fate" placeholder="0">
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Удача</div>
+              <input type="number" class="stat-value" data-field="fortune" placeholder="0">
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Упорство</div>
+              <input type="number" class="stat-value" data-field="resilience" placeholder="0">
+            </div>
+          </div>
+
+          <div class="grid-3" style="margin-top: 12px;">
+            <div class="stat-card">
+              <div class="stat-label">Решимость</div>
+              <input type="number" class="stat-value" data-field="resolve" placeholder="0">
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Мотивация</div>
+              <input type="number" class="stat-value" data-field="motivation" placeholder="0">
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Скорость</div>
+              <input type="number" class="stat-value" data-field="movement" placeholder="4">
+            </div>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">Опыт</div>
+          <div class="grid-3">
+            <div class="stat-card">
+              <div class="stat-label">Запас</div>
+              <input type="number" class="stat-value" data-field="xpCurrent" placeholder="0">
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Потрачено</div>
+              <input type="number" class="stat-value" data-field="xpSpent" placeholder="0">
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Всего</div>
+              <input type="number" class="stat-value" data-field="xpTotal" placeholder="0">
+            </div>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">Внешность</div>
+          <div class="grid-4">
+            <div class="field-group">
+              <label class="field-label">Возраст</label>
+              <input type="text" class="field-input" data-field="age" placeholder="25">
+            </div>
+            <div class="field-group">
+              <label class="field-label">Рост</label>
+              <input type="text" class="field-input" data-field="height" placeholder="175">
+            </div>
+            <div class="field-group">
+              <label class="field-label">Волосы</label>
+              <input type="text" class="field-input" data-field="hair" placeholder="Тёмные">
+            </div>
+            <div class="field-group">
+              <label class="field-label">Глаза</label>
+              <input type="text" class="field-input" data-field="eyes" placeholder="Карие">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ATTRIBUTES TAB -->
+      <div class="tab-content" id="attributes">
+        <div class="section">
+          <div class="section-title">Характеристики</div>
+          <div class="grid-2" id="attributesGrid">
+            <!-- Generated by JS -->
+          </div>
+        </div>
+      </div>
+
+      <!-- SKILLS TAB -->
+      <div class="tab-content" id="skills">
+        <div class="section">
+          <div class="section-title">Общие навыки</div>
+          <div class="skill-row">
+            <div class="skill-header">Навык</div>
+            <div class="skill-header">Хар.</div>
+            <div class="skill-header">Шаги</div>
+            <div class="skill-header">Знач.</div>
+          </div>
+          <div id="basicSkillsList">
+            <!-- Generated by JS -->
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">Профессиональные навыки</div>
+          <div id="advancedSkillsList">
+            <!-- Generated by JS -->
+          </div>
+          <button class="add-btn" onclick="addAdvancedSkill()">+ Добавить навык</button>
+        </div>
+      </div>
+
+      <!-- COMBAT TAB -->
+      <div class="tab-content" id="combat">
+        <div class="section">
+          <div class="section-title">Оружие</div>
+          <div id="weaponsList">
+            <!-- Generated by JS -->
+          </div>
+          <button class="add-btn" onclick="addWeapon()">+ Добавить оружие</button>
+        </div>
+
+        <div class="section">
+          <div class="section-title">Броня</div>
+          <div class="grid-3" style="margin-bottom: 12px;">
+            <div class="stat-card">
+              <div class="stat-label">Голова</div>
+              <input type="number" class="stat-value" data-field="armorHead" placeholder="0">
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Руки</div>
+              <input type="number" class="stat-value" data-field="armorArms" placeholder="0">
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Торс</div>
+              <input type="number" class="stat-value" data-field="armorBody" placeholder="0">
+            </div>
+          </div>
+          <div class="grid-2">
+            <div class="stat-card">
+              <div class="stat-label">Ноги</div>
+              <input type="number" class="stat-value" data-field="armorLegs" placeholder="0">
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Щит</div>
+              <input type="number" class="stat-value" data-field="armorShield" placeholder="0">
+            </div>
+          </div>
+
+          <div id="armorList" style="margin-top: 12px;">
+            <!-- Generated by JS -->
+          </div>
+          <button class="add-btn" onclick="addArmor()">+ Добавить броню</button>
+        </div>
+
+        <div class="section">
+          <div class="section-title">Деньги</div>
+          <div class="grid-3">
+            <div class="stat-card">
+              <div class="stat-label">Кроны</div>
+              <input type="number" class="stat-value" data-field="moneyGold" placeholder="0">
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Шиллинги</div>
+              <input type="number" class="stat-value" data-field="moneySilver" placeholder="0">
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Пенни</div>
+              <input type="number" class="stat-value" data-field="moneyCopper" placeholder="0">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- NOTES TAB -->
+      <div class="tab-content" id="notes">
+        <div class="section">
+          <div class="section-title">Таланты</div>
+          <div id="talentsList">
+            <!-- Generated by JS -->
+          </div>
+          <button class="add-btn" onclick="addTalent()">+ Добавить талант</button>
+        </div>
+
+        <div class="section">
+          <div class="section-title">Амбиции</div>
+          <div class="field-group">
+            <label class="field-label">Краткосрочная</label>
+            <textarea class="field-textarea" data-field="ambitionShort" placeholder="Ваша краткосрочная цель..." style="min-height: 80px;"></textarea>
+          </div>
+          <div class="field-group">
+            <label class="field-label">Долгосрочная</label>
+            <textarea class="field-textarea" data-field="ambitionLong" placeholder="Ваша долгосрочная цель..." style="min-height: 80px;"></textarea>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">Команда</div>
+          <div class="field-group">
+            <label class="field-label">Название команды</label>
+            <input type="text" class="field-input" data-field="partyName" placeholder="Название группы...">
+          </div>
+          <div class="field-group">
+            <label class="field-label">Амбиция команды</label>
+            <input type="text" class="field-input" data-field="partyAmbition" placeholder="Общая цель...">
+          </div>
+          <div class="field-group">
+            <label class="field-label">Члены команды</label>
+            <textarea class="field-textarea" data-field="partyMembers" placeholder="Список участников..."></textarea>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">Имущество</div>
+          <div id="inventoryList">
+            <!-- Generated by JS -->
+          </div>
+          <button class="add-btn" onclick="addInventoryItem()">+ Добавить предмет</button>
+        </div>
+
+        <div class="section">
+          <div class="section-title">Заметки</div>
+          <textarea class="field-textarea" data-field="notes" placeholder="Дополнительные заметки..." style="min-height: 200px;"></textarea>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    const ATTRIBUTES = [
+      { key: 'ws', name: 'ББ', fullName: 'Боевое Братство' },
+      { key: 'bs', name: 'ДБ', fullName: 'Дальнобойное Братство' },
+      { key: 's', name: 'С', fullName: 'Сила' },
+      { key: 't', name: 'В', fullName: 'Выносливость' },
+      { key: 'i', name: 'И', fullName: 'Инициатива' },
+      { key: 'ag', name: 'Пр', fullName: 'Проворность' },
+      { key: 'dex', name: 'Л', fullName: 'Ловкость' },
+      { key: 'int', name: 'Инт', fullName: 'Интеллект' },
+      { key: 'wp', name: 'СВ', fullName: 'Сила Воли' },
+      { key: 'fel', name: 'Х', fullName: 'Харизма' }
+    ];
+
+    const BASIC_SKILLS = [
+      { name: 'Азартные игры', attr: 'int' },
+      { name: 'Атлетика', attr: 'ag' },
+      { name: 'Артистизм', attr: 'fel', spec: true },
+      { name: 'Верховая езда', attr: 'ag', spec: true },
+      { name: 'Вождение', attr: 'ag' },
+      { name: 'Выживание', attr: 'int' },
+      { name: 'Гребля', attr: 's' },
+      { name: 'Запугивание', attr: 's' },
+      { name: 'Интуиция', attr: 'i' },
+      { name: 'Искусство', attr: 'dex', spec: true },
+      { name: 'Кутёж', attr: 't' },
+      { name: 'Лазание', attr: 's' },
+      { name: 'Лидерство', attr: 'fel' },
+      { name: 'Наблюдательность', attr: 'i' },
+      { name: 'Обаяние', attr: 'fel' },
+      { name: 'Ориентирование', attr: 'i' },
+      { name: 'Подкуп', attr: 'fel' },
+      { name: 'Рукоп. бой', attr: 'ws', spec: true },
+      { name: 'Рукоп. бой (основн.)', attr: 'ws' },
+      { name: 'Скрытность', attr: 'ag', spec: true },
+      { name: 'Сплетничество', attr: 'fel' },
+      { name: 'Стойкость', attr: 't' },
+      { name: 'Торговля', attr: 'fel' },
+      { name: 'Уклонение', attr: 'ag' },
+      { name: 'Усмирение животных', attr: 'wp' },
+      { name: 'Хладнокровие', attr: 'wp' }
+    ];
+
+    let characterData = {
+      attributes: {},
+      basicSkills: {},
+      advancedSkills: [],
+      weapons: [],
+      armor: [],
+      talents: [],
+      inventoryItems: []
+    };
+
+    function init() {
+      loadData();
+      renderAttributes();
+      renderBasicSkills();
+      renderAdvancedSkills();
+      renderWeapons();
+      renderArmor();
+      renderTalents();
+      renderInventory();
+      setupEventListeners();
+      loadFieldValues();
+    }
+
+    function setupEventListeners() {
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.addEventListener('click', () => switchTab(btn.dataset.tab));
+      });
+
+      document.querySelectorAll('[data-field]').forEach(input => {
+        input.addEventListener('input', () => {
+          characterData[input.dataset.field] = input.value;
+          saveData();
+        });
+      });
+    }
+
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.tab === tabId);
+      });
+      document.querySelectorAll('.tab-content').forEach(content => {
+        content.classList.toggle('active', content.id === tabId);
+      });
+    }
+
+    function renderAttributes() {
+      const grid = document.getElementById('attributesGrid');
+      grid.innerHTML = ATTRIBUTES.map(attr => `
+        <div class="attr-card">
+          <div class="attr-name">${attr.fullName} (${attr.name})</div>
+          <div class="attr-row">
+            <div class="attr-mini">
+              <div class="attr-mini-label">Начальное</div>
+              <input type="number" class="attr-mini-input" data-attr="${attr.key}" data-type="initial" 
+                value="${characterData.attributes[attr.key]?.initial || ''}" 
+                oninput="updateAttribute('${attr.key}', 'initial', this.value)">
+            </div>
+            <div class="attr-mini">
+              <div class="attr-mini-label">Развитие</div>
+              <input type="number" class="attr-mini-input" data-attr="${attr.key}" data-type="advances" 
+                value="${characterData.attributes[attr.key]?.advances || ''}" 
+                oninput="updateAttribute('${attr.key}', 'advances', this.value)">
+            </div>
+          </div>
+          <div class="attr-row">
+            <div class="attr-mini attr-current">
+              <div class="attr-mini-label">Текущее</div>
+              <input type="number" class="attr-mini-input" data-attr="${attr.key}" data-type="current" 
+                value="${characterData.attributes[attr.key]?.current || ''}" 
+                oninput="updateAttribute('${attr.key}', 'current', this.value)">
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function updateAttribute(attrKey, type, value) {
+      if (!characterData.attributes[attrKey]) {
+        characterData.attributes[attrKey] = {};
+      }
+      characterData.attributes[attrKey][type] = value;
+      saveData();
+    }
+
+    function getAttrName(key) {
+      const attr = ATTRIBUTES.find(a => a.key === key);
+      return attr ? attr.name : key;
+    }
+
+    function renderBasicSkills() {
+      const list = document.getElementById('basicSkillsList');
+      list.innerHTML = BASIC_SKILLS.map((skill, idx) => `
+        <div class="skill-row">
+          <div class="skill-name">${skill.name}${skill.spec ? ' <small>(спец.)</small>' : ''}</div>
+          <div><input type="text" class="skill-input" value="${getAttrName(skill.attr)}" readonly style="background: transparent;"></div>
+          <div><input type="number" class="skill-input" data-skill-basic="${idx}" data-type="advances" 
+            value="${characterData.basicSkills[idx]?.advances || ''}" 
+            oninput="updateBasicSkill(${idx}, 'advances', this.value)"></div>
+          <div><input type="number" class="skill-input" data-skill-basic="${idx}" data-type="value" 
+            value="${characterData.basicSkills[idx]?.value || ''}" 
+            oninput="updateBasicSkill(${idx}, 'value', this.value)"></div>
+        </div>
+      `).join('');
+    }
+
+    function updateBasicSkill(idx, type, value) {
+      if (!characterData.basicSkills[idx]) {
+        characterData.basicSkills[idx] = {};
+      }
+      characterData.basicSkills[idx][type] = value;
+      saveData();
+    }
+
+    function renderAdvancedSkills() {
+      const list = document.getElementById('advancedSkillsList');
+      list.innerHTML = characterData.advancedSkills.map((skill, idx) => `
+        <div class="skill-row" style="grid-template-columns: 1fr 50px 50px 50px 30px;">
+          <div><input type="text" class="skill-input" style="text-align: left; padding-left: 8px;" 
+            value="${skill.name || ''}" 
+            placeholder="Название навыка"
+            oninput="updateAdvancedSkill(${idx}, 'name', this.value)"></div>
+          <div><input type="text" class="skill-input" 
+            value="${skill.attr || ''}" 
+            placeholder="Хар."
+            oninput="updateAdvancedSkill(${idx}, 'attr', this.value)"></div>
+          <div><input type="number" class="skill-input" 
+            value="${skill.advances || ''}" 
+            oninput="updateAdvancedSkill(${idx}, 'advances', this.value)"></div>
+          <div><input type="number" class="skill-input" 
+            value="${skill.value || ''}" 
+            oninput="updateAdvancedSkill(${idx}, 'value', this.value)"></div>
+          <button class="delete-btn" onclick="deleteAdvancedSkill(${idx})">×</button>
+        </div>
+      `).join('');
+    }
+
+    function addAdvancedSkill() {
+      characterData.advancedSkills.push({ name: '', attr: '', advances: '', value: '' });
+      renderAdvancedSkills();
+      saveData();
+    }
+
+    function updateAdvancedSkill(idx, field, value) {
+      characterData.advancedSkills[idx][field] = value;
+      saveData();
+    }
+
+    function deleteAdvancedSkill(idx) {
+      characterData.advancedSkills.splice(idx, 1);
+      renderAdvancedSkills();
+      saveData();
+    }
+
+    function renderWeapons() {
+      const list = document.getElementById('weaponsList');
+      list.innerHTML = characterData.weapons.map((weapon, idx) => `
+        <div class="equipment-card">
+          <div class="eq-name" style="display: flex; align-items: center; gap: 8px;">
+            <input type="text" class="item-input" style="flex: 1;" 
+              value="${weapon.name || ''}" 
+              placeholder="Название оружия"
+              oninput="updateWeapon(${idx}, 'name', this.value)">
+            <button class="delete-btn" onclick="deleteWeapon(${idx})">×</button>
+          </div>
+          <div class="eq-row">
+            <div class="eq-field">
+              <div class="eq-label">Тип</div>
+              <input type="text" class="eq-input" value="${weapon.type || ''}" 
+                oninput="updateWeapon(${idx}, 'type', this.value)">
+            </div>
+            <div class="eq-field">
+              <div class="eq-label">Урон</div>
+              <input type="text" class="eq-input" value="${weapon.damage || ''}" 
+                oninput="updateWeapon(${idx}, 'damage', this.value)">
+            </div>
+            <div class="eq-field">
+              <div class="eq-label">Дальность</div>
+              <input type="text" class="eq-input" value="${weapon.range || ''}" 
+                oninput="updateWeapon(${idx}, 'range', this.value)">
+            </div>
+          </div>
+          <div style="margin-top: 8px;">
+            <div class="eq-label">Особенности</div>
+            <input type="text" class="item-input" value="${weapon.qualities || ''}" 
+              placeholder="Достоинства и изъяны"
+              oninput="updateWeapon(${idx}, 'qualities', this.value)">
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function addWeapon() {
+      characterData.weapons.push({ name: '', type: '', damage: '', range: '', qualities: '' });
+      renderWeapons();
+      saveData();
+    }
+
+    function updateWeapon(idx, field, value) {
+      characterData.weapons[idx][field] = value;
+      saveData();
+    }
+
+    function deleteWeapon(idx) {
+      characterData.weapons.splice(idx, 1);
+      renderWeapons();
+      saveData();
+    }
+
+    function renderArmor() {
+      const list = document.getElementById('armorList');
+      list.innerHTML = characterData.armor.map((armor, idx) => `
+        <div class="equipment-card">
+          <div class="eq-name" style="display: flex; align-items: center; gap: 8px;">
+            <input type="text" class="item-input" style="flex: 1;" 
+              value="${armor.name || ''}" 
+              placeholder="Название брони"
+              oninput="updateArmor(${idx}, 'name', this.value)">
+            <button class="delete-btn" onclick="deleteArmor(${idx})">×</button>
+          </div>
+          <div class="eq-row">
+            <div class="eq-field">
+              <div class="eq-label">Зоны</div>
+              <input type="text" class="eq-input" value="${armor.locations || ''}" 
+                oninput="updateArmor(${idx}, 'locations', this.value)">
+            </div>
+            <div class="eq-field">
+              <div class="eq-label">КБ</div>
+              <input type="text" class="eq-input" value="${armor.ap || ''}" 
+                oninput="updateArmor(${idx}, 'ap', this.value)">
+            </div>
+            <div class="eq-field">
+              <div class="eq-label">Вес</div>
+              <input type="text" class="eq-input" value="${armor.weight || ''}" 
+                oninput="updateArmor(${idx}, 'weight', this.value)">
+            </div>
+          </div>
+          <div style="margin-top: 8px;">
+            <div class="eq-label">Особенности</div>
+            <input type="text" class="item-input" value="${armor.qualities || ''}" 
+              placeholder="Достоинства и изъяны"
+              oninput="updateArmor(${idx}, 'qualities', this.value)">
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function addArmor() {
+      characterData.armor.push({ name: '', locations: '', ap: '', weight: '', qualities: '' });
+      renderArmor();
+      saveData();
+    }
+
+    function updateArmor(idx, field, value) {
+      characterData.armor[idx][field] = value;
+      saveData();
+    }
+
+    function deleteArmor(idx) {
+      characterData.armor.splice(idx, 1);
+      renderArmor();
+      saveData();
+    }
+
+    function renderTalents() {
+      const list = document.getElementById('talentsList');
+      list.innerHTML = characterData.talents.map((talent, idx) => `
+        <div class="item-row" style="grid-template-columns: 1fr 50px 30px;">
+          <input type="text" class="item-input" 
+            value="${talent.name || ''}" 
+            placeholder="Название таланта"
+            oninput="updateTalent(${idx}, 'name', this.value)">
+          <input type="text" class="item-input" style="text-align: center;" 
+            value="${talent.level || ''}" 
+            placeholder="Ур."
+            oninput="updateTalent(${idx}, 'level', this.value)">
+          <button class="delete-btn" onclick="deleteTalent(${idx})">×</button>
+        </div>
+      `).join('');
+    }
+
+    function addTalent() {
+      characterData.talents.push({ name: '', level: '' });
+      renderTalents();
+      saveData();
+    }
+
+    function updateTalent(idx, field, value) {
+      characterData.talents[idx][field] = value;
+      saveData();
+    }
+
+    function deleteTalent(idx) {
+      characterData.talents.splice(idx, 1);
+      renderTalents();
+      saveData();
+    }
+
+    function renderInventory() {
+      const list = document.getElementById('inventoryList');
+      list.innerHTML = characterData.inventoryItems.map((item, idx) => `
+        <div class="item-row" style="grid-template-columns: 1fr 60px 30px;">
+          <input type="text" class="item-input" 
+            value="${item.name || ''}" 
+            placeholder="Название предмета"
+            oninput="updateInventoryItem(${idx}, 'name', this.value)">
+          <input type="text" class="item-input" style="text-align: center;" 
+            value="${item.qty || ''}" 
+            placeholder="Кол."
+            oninput="updateInventoryItem(${idx}, 'qty', this.value)">
+          <button class="delete-btn" onclick="deleteInventoryItem(${idx})">×</button>
+        </div>
+      `).join('');
+    }
+
+    function addInventoryItem() {
+      characterData.inventoryItems.push({ name: '', qty: '' });
+      renderInventory();
+      saveData();
+    }
+
+    function updateInventoryItem(idx, field, value) {
+      characterData.inventoryItems[idx][field] = value;
+      saveData();
+    }
+
+    function deleteInventoryItem(idx) {
+      characterData.inventoryItems.splice(idx, 1);
+      renderInventory();
+      saveData();
+    }
+
+    function loadFieldValues() {
+      document.querySelectorAll('[data-field]').forEach(input => {
+        if (characterData[input.dataset.field] !== undefined) {
+          input.value = characterData[input.dataset.field];
+        }
+      });
+    }
+
+    function saveData() {
+      localStorage.setItem('wfrp4e_character', JSON.stringify(characterData));
+    }
+
+    function loadData() {
+      const saved = localStorage.getItem('wfrp4e_character');
+      if (saved) {
+        try {
+          const parsed = JSON.parse(saved);
+          characterData = {
+            ...characterData,
+            ...parsed,
+            attributes: parsed.attributes || {},
+            basicSkills: parsed.basicSkills || {},
+            advancedSkills: parsed.advancedSkills || [],
+            weapons: parsed.weapons || [],
+            armor: parsed.armor || [],
+            talents: parsed.talents || [],
+            inventoryItems: parsed.inventoryItems || []
+          };
+        } catch (e) {
+          console.error('Failed to load saved data:', e);
+        }
+      }
+    }
+
+    function exportData() {
+      const dataStr = JSON.stringify(characterData, null, 2);
+      const blob = new Blob([dataStr], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${characterData.name || 'character'}_wfrp4e.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function importData(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        try {
+          const imported = JSON.parse(e.target.result);
+          characterData = {
+            ...characterData,
+            ...imported,
+            attributes: imported.attributes || {},
+            basicSkills: imported.basicSkills || {},
+            advancedSkills: imported.advancedSkills || [],
+            weapons: imported.weapons || [],
+            armor: imported.armor || [],
+            talents: imported.talents || [],
+            inventoryItems: imported.inventoryItems || []
+          };
+          saveData();
+          renderAttributes();
+          renderBasicSkills();
+          renderAdvancedSkills();
+          renderWeapons();
+          renderArmor();
+          renderTalents();
+          renderInventory();
+          loadFieldValues();
+          alert('Данные успешно загружены!');
+        } catch (e) {
+          alert('Ошибка при загрузке файла: ' + e.message);
+        }
+      };
+      reader.readAsText(file);
+      event.target.value = '';
+    }
+
+    document.addEventListener('DOMContentLoaded', init);
+  </script>
+</body>
+</html>
